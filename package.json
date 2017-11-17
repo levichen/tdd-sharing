@@ -1,0 +1,15 @@
+{
+  "name": "tdd-sharing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "example1_reserve_string.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1"
+  }
+}
