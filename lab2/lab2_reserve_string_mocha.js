@@ -10,7 +10,7 @@ function reserveString (mStr) {
 }
 
 describe('Reserve String Test Cases', function () {
-  it('Expect get gfedcba when input abcdefg', function () {
+  it('Expect get `gfedcba` when input `abcdefg`', function () {
     // Arrange
     const TEST_STRING = 'abcdefg'
     const EXPECT_RESULT = 'gfedcba'
@@ -22,7 +22,7 @@ describe('Reserve String Test Cases', function () {
     expect(RESULT).to.be.equal(EXPECT_RESULT)
   })
 
-  it('Exepct get 987654321 when input 123456789', function () {
+  it('Exepct get `987654321` when input `123456789`', function () {
     // Arrange
     const TEST_STRING = '123456789'
     const EXPECT_RESULT = '987654321'
