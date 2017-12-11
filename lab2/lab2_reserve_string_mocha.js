@@ -19,6 +19,18 @@ describe('Reserve String Test Cases', function () {
     const RESULT = reserveString(TEST_STRING)
 
     // Assert
-    expect(EXPECT_RESULT).to.be.equal(RESULT)
+    expect(RESULT).to.be.equal(EXPECT_RESULT)
+  })
+
+  it('Exepct get 987654321 when input 123456789', function () {
+    // Arrange
+    const TEST_STRING = '123456789'
+    const EXPECT_RESULT = '987654321'
+
+    // Act
+    const RESULT = reserveString(TEST_STRING)
+
+    // Assert
+    expect(RESULT).to.be.equal(EXPECT_RESULT)
   })
 })
