@@ -12,13 +12,13 @@ function reserveString (mStr) {
 describe('Reserve String Test Cases', function () {
   it('Expect get gfedcba when input abcdefg', function () {
     // Arrange
-    const testString = 'abcdefg'
-    const expectResult = 'gfedcba'
+    const TEST_STRING = 'abcdefg'
+    const EXPECT_RESULT = 'gfedcba'
 
     // Act
-    const result = reserveString(testString)
+    const RESULT = reserveString(TEST_STRING)
 
     // Assert
-    expect(expectResult).to.be.equal(result)
+    expect(EXPECT_RESULT).to.be.equal(RESULT)
   })
 })
