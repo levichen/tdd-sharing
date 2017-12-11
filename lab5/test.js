@@ -45,7 +45,30 @@ describe('Lab5: Understand sinon.js', function () {
     MY_STUB.withArgs(200).returns(400)
     MY_STUB.withArgs(1).throws(new TypeError('Insert Message'))
 
-    // const RESULT = lab5.execStubWithArgsReturns(MY_STUB)
-    expect(lab5.execStubWithArgsReturns(MY_STUB)).to.throw()
+  // const RESULT = lab5.execStubWithArgsReturns(MY_STUB)
+  // expect(lab5.execStubWithArgsReturns(MY_STUB)).to.throw()
+  })
+
+  it('Test Sinon.js stub return Promise Reolsve', function () {
+    const MY_STUB = sinon.stub()
+    MY_STUB.withArgs(1).resolves(123)
+
+    lab5.execStubWithReturnPromiseResolve(MY_STUB)
+      .then((data) => {
+        console.log(data)
+      })
+  })
+
+  it('Test Sinon.js stub return Promise Reject', function () {
+    const MY_STUB = sinon.stub()
+    MY_STUB.withArgs(1).rejects(456)
+
+    lab5.execStubWithReturnPromiseResolve(MY_STUB)
+      .then((data) => {
+        console.log(data)
+      })
+      .catch((error) => {
+        console.log(`this is error ${error}`)
+      })
   })
 })

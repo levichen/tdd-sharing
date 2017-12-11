@@ -18,6 +18,14 @@ class Lab5 {
     fn(1)
     // throw new TypeError('Insert Message')
   }
+
+  execStubWithReturnPromiseResolve (fn) {
+    return fn(1)
+  }
+
+  execStubWithReturnPromiseReject (fn) {
+    return fn(1)
+  }
 }
 
 module.exports = Lab5
