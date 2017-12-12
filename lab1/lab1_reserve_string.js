@@ -3,7 +3,7 @@
  */
 function reserveString (mStr) {
   let result = ''
-  var mLen = mStr.length
+  let mLen = mStr.length
 
   for (let i = mLen; i > -1; i = i - 1) {
     result += mStr.substring(i - 1, i)
@@ -14,26 +14,26 @@ function reserveString (mStr) {
 
 function reserverStringSpec1 () {
   // Arrange
-  const testString = 'abcdefg'
-  const expectResult = 'gfedcba'
+  const TEST_STRING = 'abcdefg'
+  const EXPECT_RESULT = 'gfedcba'
 
   // Act
-  const result = reserveString(testString)
+  const TEST_RESULT = reserveString(TEST_STRING)
 
   // Assert
-  console.log(`Reserver String Test Case: ${expectResult === result}`)
+  console.log(`Reserver String Test Case: ${EXPECT_RESULT === TEST_RESULT}`)
 }
 
 function reserverStringSpec2 () {
   // Arrange
-  const testString = ''
-  const expectResult = ''
+  const TEST_STRING = ''
+  const EXPECT_RESULT = ''
 
   // Act
-  const result = reserveString(testString)
+  const RESULT = reserveString(TEST_STRING)
 
   // Assert
-  console.log(`Reserver String Test Case: ${expectResult === result}`)
+  console.log(`Reserver String Test Case: ${EXPECT_RESULT === RESULT}`)
 }
 
 reserverStringSpec1()
