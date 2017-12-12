@@ -3,7 +3,6 @@
 class Lab5 {
   execSpy (fn) {
     fn()
-    fn()
   }
 
   execSpy2 (fn) {
@@ -14,7 +13,11 @@ class Lab5 {
     return fn()
   }
 
-  execStubWithArgsReturns (fn) {
+  execStubWithArgsReturnsValue (fn) {
+    return fn(100)
+  }
+
+  execStubWithArgsReturnsError (fn) {
     fn(1)
     // throw new TypeError('Insert Message')
   }
