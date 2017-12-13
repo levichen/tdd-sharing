@@ -1,12 +1,30 @@
+/**
+ * Step1. Check exec data struct
+ * Step2. Check Read File Content
+ * Step4. Check numberOfPeople, totalOfAge, avgAgeOfPeople logic
+ * Step5. Refactoring DI, constructor
+ * Step6. Mocha beforeEach
+ * Step7. Refactoring DI, setFs method
+ */
 'use strict'
 
-const readline = require('readline')
 const fs = require('fs')
 
 const DATA_FILE_NAME = `${__dirname}/data.csv`
 
 class Lab6 {
+  constructor (fs) {
+    this.fs = null
+    this.setFS(fs)
+  }
 
+  setFS (fs) {
+    if (fs !== null) {
+      this.fs = fs
+    }
+
+    return this
+  }
   /**
    * @returns {Promise. <{Id: number, Name: string, Age: number}[]>}
    */
@@ -17,20 +35,21 @@ class Lab6 {
        */
       let persons = []
 
-      const rl = readline.createInterface({
-        input: fs.createReadStream(DATA_FILE_NAME)
-      })
+      fs.readFile(DATA_FILE_NAME, 'utf8')
 
-      rl.on('line', (line) => {
+      const data = this.fs.readFileSync(DATA_FILE_NAME, 'utf8')
+      const dataByLine = data.split('\n')
+
+      dataByLine.map((line) => {
         let person = line.split(',')
         persons.push({
           Id: parseInt(person[0]),
           Number: person[1],
           Age: parseInt(person[2])
         })
-      }).on('close', () => {
-        resolve(persons)
       })
+
+      resolve(persons)
     })
   }
 

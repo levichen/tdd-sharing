@@ -4,12 +4,18 @@ const chai = require('chai')
 const sinon = require('sinon')
 const Lab6 = require('./lab6')
 
-const lab6 = new Lab6()
+const fs = require('fs')
+
+let lab6 = null
 
 const expect = chai.expect
 
 describe('Lab6: Stub Database', function () {
   this.timeout(5000)
+
+  beforeEach(() => {
+    lab6 = new Lab6()
+  })
 
   it('Expect exec method will return correct struct', function () {
     // arrange
@@ -18,7 +24,9 @@ describe('Lab6: Stub Database', function () {
     const AVG_AGE_OF_PEOPLE = 'avgAgeOfPeople'
 
     // act
-    lab6.exec()
+    lab6
+      .setFS(fs)
+      .exec()
       .then((RESULT) => {
         // assert
         expect(RESULT).to.have.property(NUMBER_OF_PEOPLE)
@@ -37,7 +45,9 @@ describe('Lab6: Stub Database', function () {
       { Id: 4, Number: 'Peter', Age: 30 },
       { Id: 5, Number: 'Ben', Age: 44 } ]
 
-    lab6.getDataFromFile()
+    lab6
+      .setFS(fs)
+      .getDataFromFile()
       .then((persons) => {
         expect(persons).to.deep.equal(EXPECT_RESULT)
         done()
@@ -54,7 +64,9 @@ describe('Lab6: Stub Database', function () {
       avgAgeOfPeople: 30
     }
 
-    lab6.exec()
+    lab6
+      .setFS(fs)
+      .exec()
       .then((persons) => {
         expect(persons).to.deep.equal(EXPECT_RESULT)
         done()
