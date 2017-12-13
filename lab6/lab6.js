@@ -2,29 +2,72 @@
  * Step1. Check exec data struct
  * Step2. Check Read File Content
  * Step4. Check numberOfPeople, totalOfAge, avgAgeOfPeople logic
- * Step5. Refactoring DI, constructor
+ * Step5. Refactoring DI, setFs method
  * Step6. Mocha beforeEach
- * Step7. Refactoring DI, setFs method
+ * Step7. Read from database: add getDataFromDataBase method, getDataFromDataBase test case, the content same as getDataFromDataBase
+ * Step8. DI Cassandra Client
  */
 'use strict'
+
+// Step7 
+// const cassandraDriver = require('cassandra-driver')
+// const CASSANDRA_CONTACT_POINTS = [process.env.CASSANDRA_HOST || '127.0.0.1']
+// const CASSANDRA_KEY_SPACE = 'my_db'
 
 const fs = require('fs')
 
 const DATA_FILE_NAME = `${__dirname}/data.csv`
 
 class Lab6 {
-  constructor (fs) {
+  constructor () {
     this.fs = null
-    this.setFS(fs)
+    this.cassandraClient = null
   }
 
   setFS (fs) {
-    if (fs !== null) {
-      this.fs = fs
-    }
+    this.fs = fs || null
 
     return this
   }
+
+  setCassandraClient (cassandraClient) {
+    this.cassandraClient = cassandraClient || null
+
+    return this
+  }
+
+  getDataFromDataBase () {
+    // step7
+    // const cassandraClient = new cassandraDriver.Client({ contactPoints: CASSANDRA_CONTACT_POINTS, keyspace: CASSANDRA_KEY_SPACE })
+    const query = 'SELECT * FROM person;'
+
+    return new Promise((resolve, reject) => {
+      this.cassandraClient.execute(query, [], {prepare: true})
+        .then((data) => {
+          let personData = data.rows
+          /**
+             * @type {{Id: number, Name: string, Age: number}[]}
+             */
+          let persons = []
+
+          personData.map((person) => {
+            persons.push({
+              Id: person.person_id.toString(),
+              Name: person.person_name,
+              Age: person.person_age
+            })
+          })
+
+          resolve(persons)
+
+          this.cassandraClient.shutdown()
+        })
+        .catch((error) => {
+          reject(error)
+        })
+    })
+  }
+
   /**
    * @returns {Promise. <{Id: number, Name: string, Age: number}[]>}
    */
@@ -43,8 +86,8 @@ class Lab6 {
       dataByLine.map((line) => {
         let person = line.split(',')
         persons.push({
-          Id: parseInt(person[0]),
-          Number: person[1],
+          Id: person[0],
+          Name: person[1],
           Age: parseInt(person[2])
         })
       })
