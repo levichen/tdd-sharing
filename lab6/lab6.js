@@ -1,11 +1,24 @@
 /**
  * Step1. Check exec data struct
+ *  test case first
+ *  exec method return {
+      numberOfPeople: 0,
+      totalOfAge: 0,
+      avgAgeOfPeople: 0
+    }
+ *
  * Step2. Check Read File Content
+ *  getDataFromFile method  
  * Step4. Check numberOfPeople, totalOfAge, avgAgeOfPeople logic
+ *  exec method
  * Step5. Refactoring DI, setFs method
+ *  constructor this.fs
+ *  setFs method
+ *  test case call setFs
  * Step6. Mocha beforeEach
  * Step7. Read from database: add getDataFromDataBase method, getDataFromDataBase test case, the content same as getDataFromDataBase
  * Step8. DI Cassandra Client
+ * Step9. Test Database Error
  */
 'use strict'
 
