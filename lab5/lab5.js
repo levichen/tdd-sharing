@@ -1,15 +1,15 @@
 'use strict'
 
 class Lab5 {
-  execSpy (fn) {
+  execSpyCalledOnceCallCountCalled (fn) {
     fn()
   }
 
-  execSpy2 (fn) {
+  execSpyCalledWith (fn) {
     fn(1, 2)
   }
 
-  execStub (fn) {
+  execStubReturns (fn) {
     return fn()
   }
 

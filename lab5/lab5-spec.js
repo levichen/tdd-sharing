@@ -17,7 +17,7 @@ describe('Lab5: Understand sinon.js', function () {
     const EXPECT_CALLED = true
 
     // act
-    lab5.execSpy(MY_SPY)
+    lab5.execSpyCalledOnceCallCountCalled(MY_SPY)
 
     // assert
     expect(MY_SPY.calledOnce).to.equal(EXPECT_CALL_ONCE)
@@ -29,7 +29,7 @@ describe('Lab5: Understand sinon.js', function () {
     const MY_SPY = sinon.spy()
     const EXPECT_CALL_WITH_1_AND_2 = true
 
-    lab5.execSpy2(MY_SPY)
+    lab5.execSpyCalledWith(MY_SPY)
     expect(MY_SPY.calledWith(1, 2)).to.be.equal(EXPECT_CALL_WITH_1_AND_2)
   })
 
@@ -37,7 +37,7 @@ describe('Lab5: Understand sinon.js', function () {
     const MY_STUB = sinon.stub().returns(100)
     const EXPECT_RESULT = 100
 
-    const RESULT = lab5.execStub(MY_STUB)
+    const RESULT = lab5.execStubReturns(MY_STUB)
 
     expect(RESULT).to.be.equal(EXPECT_RESULT)
   })

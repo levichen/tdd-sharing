@@ -15,8 +15,8 @@ describe('Lab4: Test Async Code on Mocha', function () {
         expect(data).to.equal('success')
         done()
       })
-      .catch(() => {
-        done()
+      .catch((error) => {
+        done(error)
       })
   })
 
