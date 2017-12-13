@@ -17,5 +17,8 @@
     "env": [
       "mocha"
     ]
+  },
+  "dependencies": {
+    "cassandra-driver": "^3.3.0"
   }
 }

@@ -6,7 +6,7 @@ const expect = chai.expect
 const Lab4 = require('./lab4')
 const lab4 = new Lab4()
 
-describe('Test Async Code on Mocha', function () {
+describe('Lab4: Test Async Code on Mocha', function () {
   this.timeout(15000)
 
   it('Test1', function (done) {

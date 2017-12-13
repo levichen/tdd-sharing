@@ -5,7 +5,7 @@ let ReserveString = require('./reserve_string')
 
 let target
 
-describe('Reserve String Test Cases', function () {
+describe('Lab3: Reserve String Test Cases', function () {
   beforeEach(() => {
     target = new ReserveString()
   })
