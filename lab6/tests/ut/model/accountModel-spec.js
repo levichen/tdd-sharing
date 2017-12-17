@@ -7,11 +7,17 @@ const fs = require('fs')
 
 const AccountModel = require('../../../models/accountModel')
 
-const accountModel = new AccountModel()
+// for Step13
+let accountModel = null
 
 const expect = chai.expect
 
 describe('Account Model Unit Test', function () {
+  // for Step13
+  beforeEach(() => {
+    accountModel = new AccountModel()
+  })
+
   // for Step6
   it('Unit Test 6-1: Expect exec method will return correct struct', function (done) {
     // arrange
@@ -28,6 +34,7 @@ describe('Account Model Unit Test', function () {
         expect(RESULT).to.have.property(NUMBER_OF_PEOPLE)
         expect(RESULT).to.have.property(TOTAL_OF_AGE)
         expect(RESULT).to.have.property(AVG_AGE_OF_PEOPLE)
+        done()
       })
       .catch((error) => {
         done(error)

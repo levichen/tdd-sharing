@@ -138,6 +138,7 @@ describe('Account Model Unit Test', function () {
         expect(RESULT).to.have.property(NUMBER_OF_PEOPLE)
         expect(RESULT).to.have.property(TOTAL_OF_AGE)
         expect(RESULT).to.have.property(AVG_AGE_OF_PEOPLE)
+        done()
       })
       .catch((error) => {
         done(error)
@@ -324,6 +325,16 @@ const fs = require('fs')
 accountModel
   .setFS(fs)
 
+// for Step13
+let accountModel = null
+
+describe('Account Model Unit Test', function () {
+  // for Step13
+  beforeEach(() => {
+    accountModel = new AccountModel()
+  })
+})
+
 ## Step13-5
 app.get('/v1/statistics', (req, res, next) => {
   accountModel
@@ -336,6 +347,4 @@ app.get('/v1/statistics', (req, res, next) => {
       next(error)
     })
 })
-
-
 ```
