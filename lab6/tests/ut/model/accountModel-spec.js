@@ -2,6 +2,9 @@
 
 const chai = require('chai')
 
+// for Step13
+const fs = require('fs')
+
 const AccountModel = require('../../../models/accountModel')
 
 const accountModel = new AccountModel()
@@ -18,6 +21,7 @@ describe('Account Model Unit Test', function () {
 
     // act
     accountModel
+      .setFS(fs)
       .getStatistics()
       .then((RESULT) => {
         // assert
@@ -40,6 +44,7 @@ describe('Account Model Unit Test', function () {
 
     // Act
     accountModel
+      .setFS(fs)
       .getDataFromFile()
       .then((RESULT) => {
         // Assert
@@ -62,6 +67,7 @@ describe('Account Model Unit Test', function () {
 
     // Act
     accountModel
+      .setFS(fs)
       .getStatistics()
       .then((RESULT) => {
         // Assert

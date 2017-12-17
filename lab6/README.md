@@ -7,7 +7,7 @@
   - ut
 
 ## Step2. First Unit Test
-/tests/end2end/account-spec.js
+/tests/end2end/statistics-spec.js
 
 ```
 'use strict'
@@ -17,23 +17,23 @@ const sinon = require('sinon')
 
 const expect = chai.expect
 
-describe('End2End Test: API /v1/account', function () {
+describe('End2End Test: API /v1/statistics', function () {
 })
 ```
 
 ./node_modules/mocha/bin/_mocha --recursive lab6/tests/
 
-## Step3. Add supertest, init accountClient, first ut
+## Step3. Add supertest, init statisticsClient, first ut
 ```
-let accountClient = null
+let statisticsClient = null
 
-describe('End2End Test: API /v1/account', function () {
+describe('End2End Test: API /v1/statistics', function () {
   beforeEach(() => {
-    accountClient = server.get('/v1/account')
+    statisticsClient = server.get('/v1/statistics')
   })
 
-  it('End2End 6-1: Expect Return HTTP 200 When Call /v1/account', function (done) {
-    accountClient
+  it('End2End 6-1: Expect Return HTTP 200 When Call /v1/statistics', function (done) {
+    statisticsClient
       .expect('Content-type', /json/)
       .expect(200)
       .end((err, RESULT) => {
@@ -59,7 +59,7 @@ app.use(compression())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
-app.get('/v1/account', (req, res) => {
+app.get('/v1/statistics', (req, res) => {
   res.status(200).json({})
 })
 
@@ -125,16 +125,16 @@ const expect = chai.expect
 describe('Account Model Unit Test', function () {
   // for step1
   it('Unit Test 6-1: Expect exec method will return correct struct', function () {
-    // arrange
+    // Arrange
     const NUMBER_OF_PEOPLE = 'numberOfPeople'
     const TOTAL_OF_AGE = 'totalOfAge'
     const AVG_AGE_OF_PEOPLE = 'avgAgeOfPeople'
 
-    // act
+    // Act
     accountModel
       .getStatistics()
       .then((RESULT) => {
-        // assert
+        // Assert
         expect(RESULT).to.have.property(NUMBER_OF_PEOPLE)
         expect(RESULT).to.have.property(TOTAL_OF_AGE)
         expect(RESULT).to.have.property(AVG_AGE_OF_PEOPLE)
@@ -247,7 +247,7 @@ it('Unit Test 6-3: Expect getStatistics method will return correct data', functi
 ```
 ## Step11. Expect /v1/getStatistics method will return correct data on end2end/accountModel-spec.js
 ```
-  it('End2End 6-2: Expect /v1/account will return correct data', function (done) {
+  it('End2End 6-2: Expect /v1/statistics will return correct data', function (done) {
     // Arrange
     const EXPECT_RESULT = {
       numberOfPeople: 4,
@@ -255,7 +255,7 @@ it('Unit Test 6-3: Expect getStatistics method will return correct data', functi
       avgAgeOfPeople: 30
     }
 
-    accountClient
+    statisticsClient
       .expect('Content-type', /json/)
       .expect(200)
       .end((err, RESULT) => {
@@ -278,7 +278,7 @@ it('Unit Test 6-3: Expect getStatistics method will return correct data', functi
 const AccountModel = require('./models/accountModel')
 const accountModel = new AccountModel()
 
-app.get('/v1/account', (req, res, next) => {
+app.get('/v1/statistics', (req, res, next) => {
   accountModel
     .getStatistics()
     .then((data) => {
@@ -288,5 +288,54 @@ app.get('/v1/account', (req, res, next) => {
       next(error)
     })
 })
+```
+
+## Step13. Refactoring model/accountModel
+1. Create setFs method
+2. Create constructure for accountModel to set default value for fs
+3. Rename all of function which use fs at model/accountMode.js
+4. Call Test Codea -> Unit Test Code OK
+5. Add setFs on /v1/statitics API
+
+```
+## Step13-1, 2
+  // For Step13
+  constructor () {
+    this.fs = null
+  }
+
+  // For Step13
+  setFS (fs) {
+    this.fs = fs || null
+
+    return this
+  }
+
+## Step13-3
+const data = this.fs.readFileSync(DATA_FILE_NAME, 'utf8')
+
+Rerun all of test cases.
+所以工程師的通病，假會
+
+## Step13-4
+// for Step13
+const fs = require('fs')
+
+accountModel
+  .setFS(fs)
+
+## Step13-5
+app.get('/v1/statistics', (req, res, next) => {
+  accountModel
+    .setFS(fs)
+    .getStatistics()
+    .then((data) => {
+      res.status(200).json(data)
+    })
+    .catch((error) => {
+      next(error)
+    })
+})
+
 
 ```

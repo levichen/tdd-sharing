@@ -2,6 +2,9 @@ const express = require('express')
 const compression = require('compression')
 const bodyParser = require('body-parser')
 
+// for Step13
+const fs = require('fs')
+
 const AccountModel = require('./models/accountModel')
 const accountModel = new AccountModel()
 
@@ -12,8 +15,9 @@ app.use(compression())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
-app.get('/v1/account', (req, res, next) => {
+app.get('/v1/statistics', (req, res, next) => {
   accountModel
+    .setFS(fs)
     .getStatistics()
     .then((data) => {
       res.status(200).json(data)

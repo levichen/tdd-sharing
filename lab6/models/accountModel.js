@@ -5,6 +5,17 @@ const fs = require('fs')
 const DATA_FILE_NAME = `${__dirname}/../data/data.csv`
 
 class AccountModel {
+  // For Step13
+  constructor () {
+    this.fs = null
+  }
+
+  // For Step13
+  setFS (fs) {
+    this.fs = fs || null
+
+    return this
+  }
   /**
   * @returns {Promise. <{Id: number, Name: string, Age: number}[]>}
   */
@@ -15,7 +26,11 @@ class AccountModel {
         */
       let persons = []
 
-      const data = fs.readFileSync(DATA_FILE_NAME, 'utf8')
+      // for Step9
+      // const data = this.fs.readFileSync(DATA_FILE_NAME, 'utf8')
+
+      // for Step13
+      const data = this.fs.readFileSync(DATA_FILE_NAME, 'utf8')
       const dataByLine = data.split('\n')
 
       dataByLine.map((line) => {

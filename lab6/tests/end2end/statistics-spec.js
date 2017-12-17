@@ -8,15 +8,15 @@ const server = request(app)
 
 const expect = chai.expect
 
-let accountClient = null
+let statisticsClient = null
 
-describe('End2End Test: API /v1/account', function () {
+describe('End2End Test: API /v1/statistics', function () {
   beforeEach(() => {
-    accountClient = server.get('/v1/account')
+    statisticsClient = server.get('/v1/statistics')
   })
 
-  it('End2End 6-1: Expect Return HTTP 200 When Call /v1/account', function (done) {
-    accountClient
+  it('End2End 6-1: Expect Return HTTP 200 When Call /v1/statistics', function (done) {
+    statisticsClient
       .expect('Content-type', /json/)
       .expect(200)
       .end((err, RESULT) => {
@@ -27,7 +27,7 @@ describe('End2End Test: API /v1/account', function () {
       })
   })
 
-  it('End2End 6-2: Expect /v1/account will return correct data', function (done) {
+  it('End2End 6-2: Expect /v1/statistics will return correct data', function (done) {
     // Arrange
     const EXPECT_RESULT = {
       numberOfPeople: 4,
@@ -35,7 +35,7 @@ describe('End2End Test: API /v1/account', function () {
       avgAgeOfPeople: 30
     }
 
-    accountClient
+    statisticsClient
       .expect('Content-type', /json/)
       .expect(200)
       .end((err, RESULT) => {
