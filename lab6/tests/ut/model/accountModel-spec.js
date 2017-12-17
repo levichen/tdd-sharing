@@ -51,4 +51,26 @@ describe('Lab6: Account API', function () {
         done(error)
       })
   })
+
+  // For Step10
+  it('Test 6-3: Expect getStatistics method will return correct data', function (done) {
+    // Arrange
+    const EXPECT_RESULT = {
+      numberOfPeople: 4,
+      totalOfAge: 120,
+      avgAgeOfPeople: 30
+    }
+
+    // Act
+    accountModel
+      .getStatistics()
+      .then((persons) => {
+        // Assert
+        expect(persons).to.deep.equal(EXPECT_RESULT)
+        done()
+      })
+      .catch((error) => {
+        done(error)
+      })
+  })
 })

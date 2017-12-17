@@ -41,7 +41,20 @@ class AccountModel {
     }
 
     return new Promise((resolve, reject) => {
-      resolve(result)
+      this.getDataFromFile()
+        .then((persons) => {
+          persons.map((person) => {
+            result.numberOfPeople += 1
+            result.totalOfAge += person.Age
+          })
+
+          result.avgAgeOfPeople = result.totalOfAge / result.numberOfPeople
+
+          resolve(result)
+        })
+        .catch((error) => {
+          reject(error)
+        })
     })
   }
 }
