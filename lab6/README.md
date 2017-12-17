@@ -39,8 +39,9 @@ describe('End2End Test: API /v1/statistics', function () {
       .end((err, RESULT) => {
         if (err) {
           done(err)
+        } else {
+          done()
         }
-        done()
       })
   })
 })
@@ -262,12 +263,12 @@ it('Unit Test 6-3: Expect getStatistics method will return correct data', functi
       .end((err, RESULT) => {
         if (err) {
           done(err)
+        } else {
+          // Assert
+          expect(RESULT.body).to.deep.equal(EXPECT_RESULT)
+
+          done()
         }
-
-        // Assert
-        expect(RESULT.body).to.deep.equal(EXPECT_RESULT)
-
-        done()
       })
   })
 ```
@@ -340,6 +341,252 @@ app.get('/v1/statistics', (req, res, next) => {
   accountModel
     .setFS(fs)
     .getStatistics()
+    .then((data) => {
+      res.status(200).json(data)
+    })
+    .catch((error) => {
+      next(error)
+    })
+})
+```
+
+## Step14. Read data from Database
+1. Create Table and inert data
+2. Create getDataFromDatabase Test Case at accountModel-spec.js
+The test content same as getDataFromFile
+```
+  it('Unit Test 6-2: Expect getDataFromDatabase method will return correct data', function (done) {
+    // Arrange
+    const EXPECT_RESULT = [ { Id: '46568326-f158-4aa1-b1f5-d65840736cd3', Name: 'Levi', Age: 19 },
+      { Id: '5139ba57-fa99-4df4-91fe-7ead588ff27a', Name: 'Marry', Age: 44 },
+      { Id: '0efd11fd-6bc4-4f5f-b5ed-8baa23cad047', Name: 'Mike', Age: 27 },
+      { Id: '44a3d909-0822-4af9-bfaa-f9589cc3be39', Name: 'Peter', Age: 30 } ]
+
+    // Act
+    accountModel
+      .getDataFromDatabase()
+      .then((RESULT) => {
+        // Assert
+        expect(RESULT).to.deep.equal(EXPECT_RESULT)
+        done()
+      })
+      .catch((error) => {
+        done(error)
+      })
+  })
+```
+
+3. Run Test Case, get a red light
+4. Add getDataFromDatabase metohd
+```
+  getDataFromDatabase () {
+    const cassandraClient = new cassandraDriver.Client({ contactPoints: CASSANDRA_CONTACT_POINTS, keyspace: CASSANDRA_KEY_SPACE })
+    const query = 'SELECT * FROM person;'
+
+    return new Promise((resolve, reject) => {
+      cassandraClient.execute(query, [], {prepare: true})
+        .then((data) => {
+          let personData = data.rows
+          /**
+             * @type {{Id: number, Name: string, Age: number}[]}
+             */
+          let persons = []
+
+          personData.map((person) => {
+            persons.push({
+              Id: person.person_id.toString(),
+              Name: person.person_name,
+              Age: person.person_age
+            })
+          })
+
+          resolve(persons)
+
+          cassandraClient.shutdown()
+        })
+        .catch((error) => {
+          reject(error)
+        })
+    })
+  }
+```
+5. Run Test Case again
+
+
+## Step15. DI Cassandra Client
+1. Constructure, and setCassandraClient()
+  constructor () {
+    this.fs = null
+    this.cassandraClient = null
+  }
+
+  setCassandraClient (cassandraClient) {
+    this.cassandraClient = cassandraClient || null
+
+    return this
+  }
+
+
+2. getData FromDatabase method
+getDataFromDatabase () {
+    // reomve
+    // const cassandraClient = new cassandraDriver.Client({ contactPoints: CASSANDRA_CONTACT_POINTS, keyspace: CASSANDRA_KEY_SPACE })
+    const query = 'SELECT * FROM person;'
+
+    return new Promise((resolve, reject) => {
+      this.cassandraClient.execute(query, [], {prepare: true})
+        .then((data) => {
+          let personData = data.rows
+          /**
+             * @type {{Id: number, Name: string, Age: number}[]}
+             */
+          let persons = []
+
+          personData.map((person) => {
+            persons.push({
+              Id: person.person_id.toString(),
+              Name: person.person_name,
+              Age: person.person_age
+            })
+          })
+
+          resolve(persons)
+
+          this.cassandraClient.shutdown()
+        })
+        .catch((error) => {
+          reject(error)
+        })
+    })
+  }
+
+3. Get red light
+
+4. Modify Test Case
+```
+const cassandraDriver = require('cassandra-driver')
+const CASSANDRA_CONTACT_POINTS = [process.env.CASSANDRA_HOST || '127.0.0.1']
+const CASSANDRA_KEY_SPACE = 'my_db'
+
+  // for Step14
+  it('Unit Test 6-2: Expect getDataFromDatabase method will return correct data', function (done) {
+    // Add
+    const cassandraClient = new cassandraDriver.Client({ contactPoints: CASSANDRA_CONTACT_POINTS, keyspace: CASSANDRA_KEY_SPACE })
+
+    // Arrange
+    const EXPECT_RESULT = [ { Id: '46568326-f158-4aa1-b1f5-d65840736cd3', Name: 'Levi', Age: 19 },
+      { Id: '5139ba57-fa99-4df4-91fe-7ead588ff27a', Name: 'Marry', Age: 44 },
+      { Id: '0efd11fd-6bc4-4f5f-b5ed-8baa23cad047', Name: 'Mike', Age: 27 },
+      { Id: '44a3d909-0822-4af9-bfaa-f9589cc3be39', Name: 'Peter', Age: 30 } ]
+
+    // Act
+    accountModel
+      // Add
+      .setCassandraClient(cassandraClient)
+      .getDataFromDatabase()
+      .then((RESULT) => {
+        // Assert
+        expect(RESULT).to.deep.equal(EXPECT_RESULT)
+        done()
+      })
+      .catch((error) => {
+        done(error)
+      })
+  })
+```
+
+## Step15. Stub Cassandra Client
+```
+  it('Expect database crash will return `DatabaseError`', function (done) {
+    const cassandraClient = new cassandraDriver.Client({ contactPoints: CASSANDRA_CONTACT_POINTS, keyspace: CASSANDRA_KEY_SPACE })
+
+    const fakeError = new Error('DatabaseError')
+    sinon.stub(cassandraClient, 'execute').throws(fakeError)
+
+    accountModel
+      .setCassandraClient(cassandraClient)
+      .getDataFromDatabase()
+      .then((THIS_IS_ERROR) => {
+        done(THIS_IS_ERROR)
+      })
+      .catch((error) => {
+        expect(error.message).to.be.equal('DatabaseError')
+        done()
+      })
+  }):507
+```
+
+## Step16. Add getStatisticsFromDatabase method() on accountModel.js
+```
+## accountModel-spec.js
+  // For Step16
+  it('Unit Test 6-3: Expect getStatisticsFromDatabase method will return correct data', function (done) {
+    const cassandraClient = new cassandraDriver.Client({ contactPoints: CASSANDRA_CONTACT_POINTS, keyspace: CASSANDRA_KEY_SPACE })
+
+    // Arrange
+    const EXPECT_RESULT = {
+      numberOfPeople: 4,
+      totalOfAge: 120,
+      avgAgeOfPeople: 30
+    }
+
+    // Act
+    accountModel
+      .setCassandraClient(cassandraClient)
+      .getStatisticsFromDatabase()
+      .then((RESULT) => {
+        // Assert
+        expect(RESULT).to.deep.equal(EXPECT_RESULT)
+        done()
+      })
+      .catch((error) => {
+        done(error)
+      })
+  })
+
+## accountModel.js
+  /**
+   * @returns {Promise. <{ numberOfPeople: number, totalOfAge: number, avgAgeOfPeople: number }>}
+   */
+  getStatisticsFromDatabase () {
+    let result = {
+      numberOfPeople: 0,
+      totalOfAge: 0,
+      avgAgeOfPeople: 0
+    }
+
+    return new Promise((resolve, reject) => {
+      this.getDataFromDatabase()
+        .then((persons) => {
+          persons.map((person) => {
+            result.numberOfPeople += 1
+            result.totalOfAge += person.Age
+          })
+
+          result.avgAgeOfPeople = result.totalOfAge / result.numberOfPeople
+
+          resolve(result)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+    })
+  }
+```
+
+## Step17. Change app.js
+// for Step17
+```
+const cassandraDriver = require('cassandra-driver')
+const CASSANDRA_CONTACT_POINTS = [process.env.CASSANDRA_HOST || '127.0.0.1']
+const CASSANDRA_KEY_SPACE = 'my_db'
+
+app.get('/v1/statistics', (req, res, next) => {
+  const cassandraClient = new cassandraDriver.Client({ contactPoints: CASSANDRA_CONTACT_POINTS, keyspace: CASSANDRA_KEY_SPACE })
+
+  accountModel
+    .setCassandraClient(cassandraClient)
+    .getStatisticsFromDatabase()
     .then((data) => {
       res.status(200).json(data)
     })

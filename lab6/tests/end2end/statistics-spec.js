@@ -21,9 +21,11 @@ describe('End2End Test: API /v1/statistics', function () {
       .expect(200)
       .end((err, RESULT) => {
         if (err) {
+          console.log(err)
           done(err)
+        } else {
+          done()
         }
-        done()
       })
   })
 
@@ -41,12 +43,12 @@ describe('End2End Test: API /v1/statistics', function () {
       .end((err, RESULT) => {
         if (err) {
           done(err)
+        } else {
+          // Assert
+          expect(RESULT.body).to.deep.equal(EXPECT_RESULT)
+
+          done()
         }
-
-        // Assert
-        expect(RESULT.body).to.deep.equal(EXPECT_RESULT)
-
-        done()
       })
   })
 })
