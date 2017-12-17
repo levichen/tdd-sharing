@@ -18,7 +18,7 @@
  * Step6. Mocha beforeEach
  * Step7. Read from database: add getDataFromDataBase method, getDataFromDataBase test case, the content same as getDataFromDataBase
  * Step8. DI Cassandra Client
- * Step9. Test Database Error
+ * Step9. Database Error
  */
 'use strict'
 
