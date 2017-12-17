@@ -124,7 +124,7 @@ const expect = chai.expect
 
 describe('Account Model Unit Test', function () {
   // for step1
-  it('Unit Test 6-1: Expect exec method will return correct struct', function () {
+  it('Unit Test 6-1: Expect exec method will return correct struct', function (done) {
     // Arrange
     const NUMBER_OF_PEOPLE = 'numberOfPeople'
     const TOTAL_OF_AGE = 'totalOfAge'
@@ -140,7 +140,7 @@ describe('Account Model Unit Test', function () {
         expect(RESULT).to.have.property(AVG_AGE_OF_PEOPLE)
       })
       .catch((error) => {
-        throw new Error(error)
+        done(error)
       })
   })
 })
