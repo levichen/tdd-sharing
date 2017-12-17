@@ -32,13 +32,13 @@ describe('End2End Test: API /v1/account', function () {
     accountClient = server.get('/v1/account')
   })
 
-  it('Expect Return HTTP 200 When Call /v1/account', function (done) {
+  it('End2End 6-1: Expect Return HTTP 200 When Call /v1/account', function (done) {
     accountClient
       .expect('Content-type', /json/)
       .expect(200)
-      .end((err, res) => {
+      .end((err, RESULT) => {
         if (err) {
-          throw err
+          done(err)
         }
         done()
       })
@@ -115,7 +115,6 @@ module.exports = AccountModel
 'use strict'
 
 const chai = require('chai')
-const sinon = require('sinon')
 
 const AccountModel = require('../../../models/accountModel')
 
@@ -123,9 +122,9 @@ const accountModel = new AccountModel()
 
 const expect = chai.expect
 
-describe('Lab6: Account API', function () {
+describe('Account Model Unit Test', function () {
   // for step1
-  it('Test 6-1: Expect exec method will return correct struct', function () {
+  it('Unit Test 6-1: Expect exec method will return correct struct', function () {
     // arrange
     const NUMBER_OF_PEOPLE = 'numberOfPeople'
     const TOTAL_OF_AGE = 'totalOfAge'
@@ -168,7 +167,7 @@ getStatistics () {
 ## Step8. Give them data/data.csv then Add UT
 ```
 // for Step8
-it('Test 6-2: Expect getDataFromFile method will return correct data', function (done) {
+it('Unit Test 6-2: Expect getDataFromFile method will return correct data', function (done) {
   // Arrange
   const EXPECT_RESULT = [ { Id: '46568326-f158-4aa1-b1f5-d65840736cd3', Name: 'Levi', Age: 19 },
     { Id: '5139ba57-fa99-4df4-91fe-7ead588ff27a', Name: 'Marry', Age: 44 },
@@ -178,9 +177,9 @@ it('Test 6-2: Expect getDataFromFile method will return correct data', function 
   // Act
   accountModel
     .getDataFromFile()
-    .then((persons) => {
+    .then((RESULT) => {
       // Assert
-      expect(persons).to.deep.equal(EXPECT_RESULT)
+      expect(RESULT).to.deep.equal(EXPECT_RESULT)
       done()
     })
     .catch((error) => {
@@ -225,7 +224,7 @@ getDataFromFile () {
 
 ## Step10. Expect getStatistics method will return correct data
 ```
-it('Test 6-3: Expect getStatistics method will return correct data', function (done) {
+it('Unit Test 6-3: Expect getStatistics method will return correct data', function (done) {
   // Arrange
   const EXPECT_RESULT = {
     numberOfPeople: 4,
@@ -236,13 +235,58 @@ it('Test 6-3: Expect getStatistics method will return correct data', function (d
   // Act
   accountModel
     .getStatistics()
-    .then((persons) => {
+    .then((RESULT) => {
       // Assert
-      expect(persons).to.deep.equal(EXPECT_RESULT)
+      expect(RESULT).to.deep.equal(EXPECT_RESULT)
       done()
     })
     .catch((error) => {
       done(error)
     })
 })
+```
+## Step11. Expect /v1/getStatistics method will return correct data on end2end/accountModel-spec.js
+```
+  it('End2End 6-2: Expect /v1/account will return correct data', function (done) {
+    // Arrange
+    const EXPECT_RESULT = {
+      numberOfPeople: 4,
+      totalOfAge: 120,
+      avgAgeOfPeople: 30
+    }
+
+    accountClient
+      .expect('Content-type', /json/)
+      .expect(200)
+      .end((err, RESULT) => {
+        if (err) {
+          done(err)
+        }
+
+        // Assert
+        expect(RESULT.body).to.deep.equal(EXPECT_RESULT)
+
+        done()
+      })
+  })
+```
+
+## Step12. Add Production code for step11
+```
+## app.js
+
+const AccountModel = require('./models/accountModel')
+const accountModel = new AccountModel()
+
+app.get('/v1/account', (req, res, next) => {
+  accountModel
+    .getStatistics()
+    .then((data) => {
+      res.status(200).json(data)
+    })
+    .catch((error) => {
+      next(error)
+    })
+})
+
 ```

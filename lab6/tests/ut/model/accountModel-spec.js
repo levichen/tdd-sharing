@@ -1,7 +1,6 @@
 'use strict'
 
 const chai = require('chai')
-const sinon = require('sinon')
 
 const AccountModel = require('../../../models/accountModel')
 
@@ -9,9 +8,9 @@ const accountModel = new AccountModel()
 
 const expect = chai.expect
 
-describe('Lab6: Account API', function () {
+describe('Account Model Unit Test', function () {
   // for Step6
-  it('Test 6-1: Expect exec method will return correct struct', function () {
+  it('Unit Test 6-1: Expect exec method will return correct struct', function () {
     // arrange
     const NUMBER_OF_PEOPLE = 'numberOfPeople'
     const TOTAL_OF_AGE = 'totalOfAge'
@@ -32,7 +31,7 @@ describe('Lab6: Account API', function () {
   })
 
   // for Step8
-  it('Test 6-2: Expect getDataFromFile method will return correct data', function (done) {
+  it('Unit Test 6-2: Expect getDataFromFile method will return correct data', function (done) {
     // Arrange
     const EXPECT_RESULT = [ { Id: '46568326-f158-4aa1-b1f5-d65840736cd3', Name: 'Levi', Age: 19 },
       { Id: '5139ba57-fa99-4df4-91fe-7ead588ff27a', Name: 'Marry', Age: 44 },
@@ -42,9 +41,9 @@ describe('Lab6: Account API', function () {
     // Act
     accountModel
       .getDataFromFile()
-      .then((persons) => {
+      .then((RESULT) => {
         // Assert
-        expect(persons).to.deep.equal(EXPECT_RESULT)
+        expect(RESULT).to.deep.equal(EXPECT_RESULT)
         done()
       })
       .catch((error) => {
@@ -53,7 +52,7 @@ describe('Lab6: Account API', function () {
   })
 
   // For Step10
-  it('Test 6-3: Expect getStatistics method will return correct data', function (done) {
+  it('Unit Test 6-3: Expect getStatistics method will return correct data', function (done) {
     // Arrange
     const EXPECT_RESULT = {
       numberOfPeople: 4,
@@ -64,9 +63,9 @@ describe('Lab6: Account API', function () {
     // Act
     accountModel
       .getStatistics()
-      .then((persons) => {
+      .then((RESULT) => {
         // Assert
-        expect(persons).to.deep.equal(EXPECT_RESULT)
+        expect(RESULT).to.deep.equal(EXPECT_RESULT)
         done()
       })
       .catch((error) => {

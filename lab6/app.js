@@ -2,6 +2,9 @@ const express = require('express')
 const compression = require('compression')
 const bodyParser = require('body-parser')
 
+const AccountModel = require('./models/accountModel')
+const accountModel = new AccountModel()
+
 const app = express()
 
 app.use(compression())
@@ -9,8 +12,15 @@ app.use(compression())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
-app.get('/v1/account', (req, res) => {
-  res.status(200).json({})
+app.get('/v1/account', (req, res, next) => {
+  accountModel
+    .getStatistics()
+    .then((data) => {
+      res.status(200).json(data)
+    })
+    .catch((error) => {
+      next(error)
+    })
 })
 
 // catch 404 and forward to error handler
