@@ -89,17 +89,17 @@ class AccountModel {
 
   getDataFromDatabase () {
     // reomve
-    const cassandraClient = new cassandraDriver.Client({ contactPoints: CASSANDRA_CONTACT_POINTS, keyspace: CASSANDRA_KEY_SPACE })
     const query = 'SELECT * FROM person;'
 
     return new Promise((resolve, reject) => {
+      /**
+      * @type {{Id: number, Name: string, Age: number}[]}
+      */
+      let persons = []
+
       this.cassandraClient.execute(query, [], {prepare: true})
         .then((data) => {
           let personData = data.rows
-          /**
-             * @type {{Id: number, Name: string, Age: number}[]}
-             */
-          let persons = []
 
           personData.map((person) => {
             persons.push({
@@ -114,7 +114,7 @@ class AccountModel {
           this.cassandraClient.shutdown()
         })
         .catch((error) => {
-          reject(error)
+          reject(persons)
         })
     })
   }

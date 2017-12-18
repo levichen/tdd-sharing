@@ -247,7 +247,7 @@ it('Unit Test 6-3: Expect getStatistics method will return correct data', functi
     })
 })
 ```
-## Step11. Expect /v1/getStatistics method will return correct data on end2end/accountModel-spec.js
+## Step11. Expect /v1/statistics method will return correct data on end2end/accountModel-spec.js
 ```
   it('End2End 6-2: Expect /v1/statistics will return correct data', function (done) {
     // Arrange
@@ -357,7 +357,7 @@ app.get('/v1/statistics', (req, res, next) => {
 2. Create getDataFromDatabase Test Case at accountModel-spec.js
 The test content same as getDataFromFile
 ```
-  it('Unit Test 6-2: Expect getDataFromDatabase method will return correct data', function (done) {
+  it('Unit Test 6-4: Expect getDataFromDatabase method will return correct data', function (done) {
     // Arrange
     const EXPECT_RESULT = [ { Id: '46568326-f158-4aa1-b1f5-d65840736cd3', Name: 'Levi', Age: 19 },
       { Id: '5139ba57-fa99-4df4-91fe-7ead588ff27a', Name: 'Marry', Age: 44 },
@@ -471,7 +471,7 @@ const CASSANDRA_CONTACT_POINTS = [process.env.CASSANDRA_HOST || '127.0.0.1']
 const CASSANDRA_KEY_SPACE = 'my_db'
 
   // for Step14
-  it('Unit Test 6-2: Expect getDataFromDatabase method will return correct data', function (done) {
+  it('Unit Test 6-4: Expect getDataFromDatabase method will return correct data', function (done) {
     // Add
     const cassandraClient = new cassandraDriver.Client({ contactPoints: CASSANDRA_CONTACT_POINTS, keyspace: CASSANDRA_KEY_SPACE })
 
@@ -497,9 +497,9 @@ const CASSANDRA_KEY_SPACE = 'my_db'
   })
 ```
 
-## Step15. Stub Cassandra Client
+## Step16. Stub Cassandra Client
 ```
-  it('Expect database crash will return `DatabaseError`', function (done) {
+  it('Unit Test 6-5: Expect database crash will return `DatabaseError`', function (done) {
     const cassandraClient = new cassandraDriver.Client({ contactPoints: CASSANDRA_CONTACT_POINTS, keyspace: CASSANDRA_KEY_SPACE })
 
     const fakeError = new Error('DatabaseError')
@@ -518,11 +518,67 @@ const CASSANDRA_KEY_SPACE = 'my_db'
   }):507
 ```
 
-## Step16. Add getStatisticsFromDatabase method() on accountModel.js
+## Step17. Test Database return Promise.reject
 ```
 ## accountModel-spec.js
-  // For Step16
-  it('Unit Test 6-3: Expect getStatisticsFromDatabase method will return correct data', function (done) {
+  it('Unit Test 6-6: Expect database return Promise.reject the getDataFromDatabase() will return []', function (done) {
+    const cassandraClient = new cassandraDriver.Client({ contactPoints: CASSANDRA_CONTACT_POINTS, keyspace: CASSANDRA_KEY_SPACE })
+
+    sinon.stub(cassandraClient, 'execute').rejects('something wrong')
+
+    accountModel
+      .setCassandraClient(cassandraClient)
+      .getDataFromDatabase()
+      .then((THIS_IS_ERROR) => {
+        done(THIS_IS_ERROR)
+      })
+      .catch((RESULT) => {
+        expect(RESULT).to.be.deep.equal([])
+        done()
+      })
+  })
+
+## accountModel.js
+  getDataFromDatabase () {
+    // reomve
+    const query = 'SELECT * FROM person;'
+
+    return new Promise((resolve, reject) => {
+      // move this
+      /**
+      * @type {{Id: number, Name: string, Age: number}[]}
+      */
+      let persons = []
+
+      this.cassandraClient.execute(query, [], {prepare: true})
+        .then((data) => {
+          let personData = data.rows
+
+          personData.map((person) => {
+            persons.push({
+              Id: person.person_id.toString(),
+              Name: person.person_name,
+              Age: person.person_age
+            })
+          })
+
+          resolve(persons)
+
+          this.cassandraClient.shutdown()
+        })
+        .catch((error) => {
+          // add this
+          reject(persons)
+        })
+    })
+  }
+```
+
+## Step18. Add getStatisticsFromDatabase method() on accountModel.js
+```
+## accountModel-spec.js
+  // For Step18
+  it('Unit Test 6-7: Expect getStatisticsFromDatabase method will return correct data', function (done) {
     const cassandraClient = new cassandraDriver.Client({ contactPoints: CASSANDRA_CONTACT_POINTS, keyspace: CASSANDRA_KEY_SPACE })
 
     // Arrange
@@ -576,8 +632,8 @@ const CASSANDRA_KEY_SPACE = 'my_db'
   }
 ```
 
-## Step17. Change app.js
-// for Step17
+## Step19. Change app.js
+// for Step19
 ```
 const cassandraDriver = require('cassandra-driver')
 const CASSANDRA_CONTACT_POINTS = [process.env.CASSANDRA_HOST || '127.0.0.1']

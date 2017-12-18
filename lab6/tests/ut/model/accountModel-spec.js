@@ -93,7 +93,7 @@ describe('Account Model Unit Test', function () {
   })
 
   // for Step14
-  it('Unit Test 6-2: Expect getDataFromDatabase method will return correct data', function (done) {
+  it('Unit Test 6-4: Expect getDataFromDatabase method will return correct data', function (done) {
     // Add
     const cassandraClient = new cassandraDriver.Client({ contactPoints: CASSANDRA_CONTACT_POINTS, keyspace: CASSANDRA_KEY_SPACE })
 
@@ -118,8 +118,8 @@ describe('Account Model Unit Test', function () {
       })
   })
 
-  // for Step15
-  it('Expect database crash will return `DatabaseError`', function (done) {
+  // for Step16
+  it('Unit Test 6-5: Expect database crash will return `DatabaseError`', function (done) {
     const cassandraClient = new cassandraDriver.Client({ contactPoints: CASSANDRA_CONTACT_POINTS, keyspace: CASSANDRA_KEY_SPACE })
 
     const fakeError = new Error('DatabaseError')
@@ -137,8 +137,26 @@ describe('Account Model Unit Test', function () {
       })
   })
 
-  // For Step16
-  it('Unit Test 6-3: Expect getStatisticsFromDatabase method will return correct data', function (done) {
+  // for Step18
+  it('Unit Test 6-6: Expect database return Promise.reject the getDataFromDatabase() will return []', function (done) {
+    const cassandraClient = new cassandraDriver.Client({ contactPoints: CASSANDRA_CONTACT_POINTS, keyspace: CASSANDRA_KEY_SPACE })
+
+    sinon.stub(cassandraClient, 'execute').rejects('something wrong')
+
+    accountModel
+      .setCassandraClient(cassandraClient)
+      .getDataFromDatabase()
+      .then((THIS_IS_ERROR) => {
+        done(THIS_IS_ERROR)
+      })
+      .catch((RESULT) => {
+        expect(RESULT).to.be.deep.equal([])
+        done()
+      })
+  })
+
+  // For Step18
+  it('Unit Test 6-7: Expect getStatisticsFromDatabase method will return correct data', function (done) {
     const cassandraClient = new cassandraDriver.Client({ contactPoints: CASSANDRA_CONTACT_POINTS, keyspace: CASSANDRA_KEY_SPACE })
 
     // Arrange

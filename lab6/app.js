@@ -8,7 +8,7 @@ const fs = require('fs')
 const AccountModel = require('./models/accountModel')
 const accountModel = new AccountModel()
 
-// for Step17
+// for Step18
 const cassandraDriver = require('cassandra-driver')
 const CASSANDRA_CONTACT_POINTS = [process.env.CASSANDRA_HOST || '127.0.0.1']
 const CASSANDRA_KEY_SPACE = 'my_db'
