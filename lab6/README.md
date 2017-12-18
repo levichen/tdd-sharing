@@ -352,6 +352,8 @@ app.get('/v1/statistics', (req, res, next) => {
 
 ## Step14. Read data from Database
 1. Create Table and inert data
+  * Run Docker
+  * exec data/create.sql
 2. Create getDataFromDatabase Test Case at accountModel-spec.js
 The test content same as getDataFromFile
 ```
