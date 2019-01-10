@@ -352,8 +352,9 @@ app.get('/v1/statistics', (req, res, next) => {
 
 ## Step14. Read data from Database
 1. Create Table and inert data
-  * Run Docker
-  * exec data/create.sql
+  * `docker run --name some-cassandra -p 9042:9042 -d cassandra`
+  * `docker exec -it some-cassandra cqlsh`
+  * cop `data/create.sql` content then paste to cassandra shell
 2. Create getDataFromDatabase Test Case at accountModel-spec.js
 The test content same as getDataFromFile
 ```
