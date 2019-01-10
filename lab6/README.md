@@ -418,6 +418,7 @@ The test content same as getDataFromFile
 
 ## Step15. DI Cassandra Client
 1. Constructure, and setCassandraClient()
+```
   constructor () {
     this.fs = null
     this.cassandraClient = null
@@ -428,9 +429,10 @@ The test content same as getDataFromFile
 
     return this
   }
-
+```
 
 2. getData FromDatabase method
+```
 getDataFromDatabase () {
     // reomve
     // const cassandraClient = new cassandraDriver.Client({ contactPoints: CASSANDRA_CONTACT_POINTS, keyspace: CASSANDRA_KEY_SPACE })
@@ -462,6 +464,7 @@ getDataFromDatabase () {
         })
     })
   }
+```
 
 3. Get red light
 
