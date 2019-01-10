@@ -382,6 +382,9 @@ The test content same as getDataFromFile
 3. Run Test Case, get a red light
 4. Add getDataFromDatabase metohd
 ```
+  const CASSANDRA_CONTACT_POINTS = [process.env.CASSANDRA_HOST || '127.0.0.1']
+  const CASSANDRA_KEY_SPACE = 'my_db'
+
   getDataFromDatabase () {
     const cassandraClient = new cassandraDriver.Client({ contactPoints: CASSANDRA_CONTACT_POINTS, keyspace: CASSANDRA_KEY_SPACE })
     const query = 'SELECT * FROM person;'
